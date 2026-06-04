@@ -97,7 +97,6 @@ local function checkAir(s: Session, cur: ServerSample): Violation?
 
     s.airTime += cur.dt
     
-    -- Absolute continuous flight threshold check (Concept from PolarCanse)
     if s.airTime > 5.5 then
         return { kind = Reason.Fly, sev = 8, msg = "Continuous flight time limit exceeded", correct = true }
     end
