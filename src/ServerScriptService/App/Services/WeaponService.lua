@@ -1,10 +1,10 @@
---strict
+--!strict
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
 
 local SharedApp = ReplicatedStorage:WaitForChild("App")
-local ServerApp = ServerScriptService:WaitForChild("App")
+local ServerApp = script.Parent.Parent -- Points directly to ServerScriptService.Server
 local Cfg = require(SharedApp.Config.QBConfig)
 local WeaponConfig = require(SharedApp.Config.WeaponConfig)
 local CombatChecks = require(ServerApp.SubServices.CombatChecks)
@@ -30,7 +30,6 @@ end
 local function verifyTOTPSignature(player: Player, hash: number, hitPosX: number, seq: number): boolean
     local now = math.floor(workspace:GetServerTimeNow())
     
-    -- Checks local timeline window drift to allow high-ping synchronizations safely
     for offset = -1, 1 do
         local testSeed = now + offset
         local expected = Packets.generateHash(testSeed, player.UserId, math.floor(hitPosX * 10) + seq)
@@ -58,7 +57,7 @@ function WeaponService:Start()
         end
         clientSequences[player] = clientSeq
 
-        -- 2. Secure dynamic seed verification
+        -- 2. Dynamic seed verification
         if not verifyTOTPSignature(player, securityHash, hitPosition.X, clientSeq) then
             Violations.report(player, { kind = Reason.MetamethodHook, sev = 9, msg = "TOTP Cryptographic dynamic signature check failed (Argument Hooking)", correct = false })
             player:Kick("[DEVIOS Sentinel] Critical Security Breach: Encryption Handshake Violation.")
