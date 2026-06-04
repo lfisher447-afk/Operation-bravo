@@ -6,7 +6,7 @@ local Config = {
     bufSize = 64,
     fixBufSize = 30,
 
-    -- Speed & Movement Physics Constraints (Tactical Baseline)
+    -- Speed & Movement Physics Constraints
     defaultSpeed = 12,
     maxSpeed = 20,
     maxTeleport = 22,
@@ -88,7 +88,7 @@ local Config = {
     pkBurst = 30,
     spawnGrace = 4.0,
     maxDesync = 4.0,
-    ADMIN_USERIDS = { 0 }, -- Secure user overrides array for administrative permissions
+    ADMIN_USERIDS = { 0 },
     logEnabled = true,
 
     -- Role and Integration Rules
