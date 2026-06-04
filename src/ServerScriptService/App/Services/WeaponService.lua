@@ -16,7 +16,7 @@ local WeaponService = { Name = "WeaponService" }
 local remotesFolder: Folder? = nil
 local dealDamageRemote: RemoteEvent? = nil
 
-local clientTickRates = {} -- [Player] = lastClientSeq
+local clientSequences = {} -- [Player] = lastClientSeq
 
 function WeaponService:Init()
     remotesFolder = ReplicatedStorage:WaitForChild("App"):WaitForChild("Remotes")
@@ -27,34 +27,45 @@ function WeaponService:Init()
     dealDamageRemote = d
 end
 
+local function verifyTOTPSignature(player: Player, hash: number, hitPosX: number, seq: number): boolean
+    local now = math.floor(workspace:GetServerTimeNow())
+    
+    -- Checks local timeline window drift to allow high-ping synchronizations safely
+    for offset = -1, 1 do
+        local testSeed = now + offset
+        local expected = Packets.generateHash(testSeed, player.UserId, math.floor(hitPosX * 10) + seq)
+        if hash == expected then
+            return true
+        end
+    end
+    return false
+end
+
 function WeaponService:Start()
     assert(dealDamageRemote ~= nil, "Remotes must be initialized before boot.")
     
     dealDamageRemote.OnServerEvent:Connect(function(player, targetPlayer, hitPosition, isHeadshot, weaponName, rayOrigin, rayDir, clientTime, clientSeq, securityHash)
-        -- 1. Ensure type-conformance
         if typeof(targetPlayer) ~= "Instance" or not targetPlayer:IsA("Player") then return end
         if typeof(hitPosition) ~= "Vector3" or typeof(rayOrigin) ~= "Vector3" or typeof(rayDir) ~= "Vector3" then return end
         if typeof(weaponName) ~= "string" or typeof(isHeadshot) ~= "boolean" then return end
         if typeof(clientTime) ~= "number" or typeof(clientSeq) ~= "number" or typeof(securityHash) ~= "number" then return end
         
-        -- 2. Prevent replay/backward sequence injections
-        local lastSeq = clientTickRates[player] or -1
+        -- 1. Sequential Packet protection
+        local lastSeq = clientSequences[player] or -1
         if clientSeq <= lastSeq then
-            Violations.report(player, { kind = Reason.SpoofedPacket, sev = 5, msg = "Client transaction replay/desync sequence bypassed", correct = false })
+            Violations.report(player, { kind = Reason.SpoofedPacket, sev = 6, msg = "Sequential transaction replay interception (Packet injection)", correct = false })
             return
         end
-        clientTickRates[player] = clientSeq
+        clientSequences[player] = clientSeq
 
-        -- 3. Verify Argument-Hook Protections via salt token validations
-        local seed = player.UserId -- Rotated salt value
-        local expectedHash = Packets.generateHash(seed, player.UserId, math.floor(hitPosition.X * 10) + clientSeq)
-        if securityHash ~= expectedHash then
-            Violations.report(player, { kind = Reason.MetamethodHook, sev = 8, msg = "Remote Argument hook manipulation verification failed", correct = false })
-            player:Kick("[DEVIOS Sentinel] Remote Transaction Exception: Hash Verification Failure.")
+        -- 2. Secure dynamic seed verification
+        if not verifyTOTPSignature(player, securityHash, hitPosition.X, clientSeq) then
+            Violations.report(player, { kind = Reason.MetamethodHook, sev = 9, msg = "TOTP Cryptographic dynamic signature check failed (Argument Hooking)", correct = false })
+            player:Kick("[DEVIOS Sentinel] Critical Security Breach: Encryption Handshake Violation.")
             return
         end
 
-        -- 4. Audit combat rules
+        -- 3. Run weapon checks
         local weaponData = WeaponConfig[weaponName]
         if not weaponData then return end
         
@@ -69,7 +80,7 @@ function WeaponService:Start()
                 dmg = dmg * weaponData.HeadshotMult
             end
             hum:TakeDamage(dmg)
-            print("[TACTICAL REPLICATION]", player.Name, "landed shot on", targetPlayer.Name, "for", dmg, "damage.")
+            print("[RECONCILED FIRE]", player.Name, "landed shot on", targetPlayer.Name, "for", dmg, "damage.")
         end
     end)
 end
