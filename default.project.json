@@ -1,64 +1,85 @@
 {
   "name": "Operation-Bravo",
   "tree": {
-    "\$className": "DataModel",
+    "$className": "DataModel",
     "ReplicatedFirst": {
       "BootLoader": {
-        "\$path": "src/ReplicatedFirst/BootLoader.client.lua"
+        "$path": "src/ReplicatedFirst/BootLoader.client.lua"
       }
     },
     "ReplicatedStorage": {
       "App": {
-        "\$path": "src/ReplicatedStorage/App"
+        "$path": "src/ReplicatedStorage/App"
       },
       "Shared": {
-        "\$path": "src/ReplicatedStorage/Shared"
+        "$path": "src/ReplicatedStorage/Shared"
       },
       "NovaAC": {
         "ThirdParty": {
-          "\$path": "src/ReplicatedStorage/NovaAC/ThirdParty"
+          "$path": "src/ReplicatedStorage/NovaAC/ThirdParty"
         }
       },
       "Remotes": {
-        "\$className": "Folder"
+        "$className": "Folder"
+      },
+      "VANITY-ANTICHEAT": {
+        "$path": "src/ReplicatedStorage/VANITY-ANTICHEAT"
       }
     },
     "ServerScriptService": {
       "Server": {
-        "\$path": "src/ServerScriptService/Server"
+        "$path": "src/ServerScriptService/Server"
       },
       "NovaAC": {
         "ThirdParty": {
-          "\$path": "src/ServerScriptService/NovaAC/ThirdParty"
+          "$path": "src/ServerScriptService/NovaAC/ThirdParty"
         }
+      },
+      "integration": {
+        "$className": "Folder",
+        "game": {
+          "$path": "src/ServerScriptService/integration/modules"
+        },
+        "node_modules": {
+          "$path": "node_modules"
+        }
+      },
+      "NevermoreServerMain": {
+        "$path": "src/ServerScriptService/NevermoreServerMain.server.lua"
+      },
+      "LightBorn": {
+        "$path": "src/ServerScriptService/LightBorn"
+      },
+      "VanityACServer": {
+        "$path": "src/ServerScriptService/VanityACServer"
       }
     },
     "StarterPlayer": {
       "StarterPlayerScripts": {
         "Client": {
-          "\$path": "src/StarterPlayer/StarterPlayerScripts"
+          "$path": "src/StarterPlayer/StarterPlayerScripts"
         }
       }
     },
     "StarterGui": {
-      "\$path": "src/StarterGui"
+      "$path": "src/StarterGui"
     },
     "ServerStorage": {
       "JekyModules": {
-        "\$path": "src/ServerStorage/JekyModules"
+        "$path": "src/ServerStorage/JekyModules"
       },
       "ShipSystem": {
-        "\$path": "src/ServerStorage/ShipSystem"
+        "$path": "src/ServerStorage/ShipSystem"
       }
     },
     "Teams": {
-      "\$path": "src/Teams"
+      "$path": "src/Teams"
     },
     "Lighting": {
-      "\$path": "src/Lighting"
+      "$path": "src/Lighting"
     },
     "Workspace": {
-      "\$path": "src/Workspace"
+      "$path": "src/Workspace"
     }
   }
 }
