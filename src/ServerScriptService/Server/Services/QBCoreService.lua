@@ -26,7 +26,7 @@ local RotationCheck = require(ServerScriptService.NovaAC.ThirdParty.BitAntiCheat
 local ToolCheck = require(ServerScriptService.NovaAC.ThirdParty.BitAntiCheat.Checks.ToolCheck)
 local StateCheck = require(ServerScriptService.NovaAC.ThirdParty.BitAntiCheat.Checks.StateCheck)
 local PositionTracker = require(ServerScriptService.NovaAC.ThirdParty.HardWay.PositionTracker)
-local BehaviorAnalyzer = require(ServerScriptService.NovaAC.ThirdParty.VanityAC["VANITY-ANTICHEAT-BEHAVIOR-ANALYZER"])
+local BehaviorAnalyzer = require(ReplicatedStorage:WaitForChild("VANITY-ANTICHEAT"):WaitForChild("VANITY-ANTICHEAT-BEHAVIOR-ANALYZER"))
 
 local QBCoreService = {}
 QBCoreService.__index = QBCoreService
