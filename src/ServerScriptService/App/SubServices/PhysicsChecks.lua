@@ -48,7 +48,7 @@ function Physics.angularVel(hrp: BasePart?): Violation?
     if hrp == nil or not Cfg.checks.physics then return nil end
     local av = hrp.AssemblyAngularVelocity.Magnitude
     if av > 72 then
-        hrp.AssemblyAngularVelocity = Vector3.zero -- Force zero clamping
+        hrp.AssemblyAngularVelocity = Vector3.zero
         return { kind = Reason.Physics, sev = 5, msg = "Extreme angular velocity spike (Rotation exploit/Spinbot)", correct = true }
     end
     return nil
