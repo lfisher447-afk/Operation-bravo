@@ -1,11 +1,11 @@
---strict
+--!strict
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 local ServerScriptService = game:GetService("ServerScriptService")
 
 local SharedApp = ReplicatedStorage:WaitForChild("App")
-local ServerApp = ServerScriptService:WaitForChild("App")
+local ServerApp = script.Parent.Parent -- Points directly to ServerScriptService.Server
 local Cfg = require(SharedApp.Config.QBConfig)
 local Wire = require(SharedApp.Networking.QBPackets)
 local Janitor = require(SharedApp.Utilities.Janitor)
@@ -23,6 +23,13 @@ local AdminSecure = require(ServerApp.SubServices.AdminPanelSecure)
 local BypassChecks = require(ServerApp.SubServices.BypassChecks)
 local RemoteEventSecurity = require(ServerApp.SubServices.RemoteEventSecurity)
 
+-- Third-party detections integrated
+local RotationCheck = require(ServerScriptService.NovaAC.ThirdParty.BitAntiCheat.Checks.RotationCheck)
+local ToolCheck = require(ServerScriptService.NovaAC.ThirdParty.BitAntiCheat.Checks.ToolCheck)
+local StateCheck = require(ServerScriptService.NovaAC.ThirdParty.BitAntiCheat.Checks.StateCheck)
+local PositionTracker = require(ServerScriptService.NovaAC.ThirdParty.HardWay.PositionTracker)
+local BehaviorAnalyzer = require(ReplicatedStorage:WaitForChild("VANITY-ANTICHEAT"):WaitForChild("VANITY-ANTICHEAT-BEHAVIOR-ANALYZER"))
+
 local QBCoreService = {}
 QBCoreService.__index = QBCoreService
 
@@ -38,8 +45,20 @@ end
 
 function QBCoreService:attach(player: Player)
     if self._sessions[player] then return end
-    self._sessions[player] = SessionMod.new(player)
+    local session = SessionMod.new(player)
+    self._sessions[player] = session
     CombatChecks.initPlayer(player)
+
+    player.CharacterAdded:Connect(function(char)
+        StateCheck:characterAdded({ 
+            player = player, 
+            strike = function(_, val, msg) self:strike(player, val, msg) end 
+        }, char)
+        ToolCheck:characterAdded({ 
+            player = player, 
+            strike = function(_, val, msg) self:strike(player, val, msg) end 
+        }, char)
+    end)
 end
 
 function QBCoreService:detach(player: Player)
@@ -50,6 +69,10 @@ function QBCoreService:detach(player: Player)
         session:destroy()
         self._sessions[player] = nil
     end
+end
+
+function QBCoreService:strike(player: Player, severity: number, message: string)
+    Violations.report(player, { kind = Reason.Physics, sev = severity * 2, msg = "[Suite Breach] " .. message, correct = true })
 end
 
 function QBCoreService:onClientPacket(player: Player, payload: any)
@@ -84,6 +107,11 @@ function QBCoreService:onClientPacket(player: Player, payload: any)
     if now >= session.pauseUntil then
         session.lastClientPos = packet.pos
         session.lastClientVel = packet.vel
+
+        local anomaly = BehaviorAnalyzer.analyzeMovement(player, packet.pos, packet.vel)
+        if anomaly > 0 then
+            self:strike(player, anomaly, "Vanity trajectory analysis warning.")
+        end
     end
 end
 
@@ -92,9 +120,14 @@ function QBCoreService:tick(dt: number)
     local fixRemote = if self._endpoints then self._endpoints.fix else nil
 
     for player, session in pairs(self._sessions) do
-        -- Sampling loop evaluates authoritative server states natively
         local sample = Sampler.snap(session, now, dt)
         if not sample then continue end
+
+        local simulatedPlayer = { 
+            player = player, 
+            strike = function(_, val, msg) self:strike(player, val, msg) end 
+        }
+        RotationCheck:checkPlayer(simulatedPlayer)
 
         local v = MovementChecks.run(player, session, sample)
         if v.sev > 0 then
