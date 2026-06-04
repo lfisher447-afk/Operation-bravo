@@ -6,7 +6,6 @@ local Types = require(SharedApp.Types.MovementTypes)
 
 local Sampler = {}
 
--- Safely calculates server-authoritative parameters without trusting client-reported states
 function Sampler.snap(session: any, now: number, dt: number): Types.ServerSample?
     local root = session.root
     local hum = session.humanoid
