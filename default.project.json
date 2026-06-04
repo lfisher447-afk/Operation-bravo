@@ -1,0 +1,64 @@
+{
+  "name": "Operation-Bravo",
+  "tree": {
+    "\$className": "DataModel",
+    "ReplicatedFirst": {
+      "BootLoader": {
+        "\$path": "src/ReplicatedFirst/BootLoader.client.lua"
+      }
+    },
+    "ReplicatedStorage": {
+      "App": {
+        "\$path": "src/ReplicatedStorage/App"
+      },
+      "Shared": {
+        "\$path": "src/ReplicatedStorage/Shared"
+      },
+      "NovaAC": {
+        "ThirdParty": {
+          "\$path": "src/ReplicatedStorage/NovaAC/ThirdParty"
+        }
+      },
+      "Remotes": {
+        "\$className": "Folder"
+      }
+    },
+    "ServerScriptService": {
+      "Server": {
+        "\$path": "src/ServerScriptService/Server"
+      },
+      "NovaAC": {
+        "ThirdParty": {
+          "\$path": "src/ServerScriptService/NovaAC/ThirdParty"
+        }
+      }
+    },
+    "StarterPlayer": {
+      "StarterPlayerScripts": {
+        "Client": {
+          "\$path": "src/StarterPlayer/StarterPlayerScripts"
+        }
+      }
+    },
+    "StarterGui": {
+      "\$path": "src/StarterGui"
+    },
+    "ServerStorage": {
+      "JekyModules": {
+        "\$path": "src/ServerStorage/JekyModules"
+      },
+      "ShipSystem": {
+        "\$path": "src/ServerStorage/ShipSystem"
+      }
+    },
+    "Teams": {
+      "\$path": "src/Teams"
+    },
+    "Lighting": {
+      "\$path": "src/Lighting"
+    },
+    "Workspace": {
+      "\$path": "src/Workspace"
+    }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "properties": {
+    "Ambient": [20, 20, 25],
+    "OutdoorAmbient": [35, 35, 40],
+    "GlobalShadows": true,
+    "Technology": "Future"
+  }
+}

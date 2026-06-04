@@ -1,0 +1,8 @@
+{
+  "\$className": "Team",
+  "properties": {
+    "Name": "Raider",
+    "TeamColor": "Bright red",
+    "AutoAssignable": true
+  }
+}

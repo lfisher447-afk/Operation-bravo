@@ -1,0 +1,5 @@
+local Players = game:GetService('Players')
+local Teams = game:GetService('Teams')
+local ReplicatedStorage = game:GetService('ReplicatedStorage')
+local TeleportService = game:GetService('TeleportService')
+print('[MAIN MENU] MainMenuServer v3.0 operational.')

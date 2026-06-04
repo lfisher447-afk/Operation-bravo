@@ -1,0 +1,2 @@
+local GameBindersServer = {}
+return GameBindersServer

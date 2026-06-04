@@ -1,0 +1,2 @@
+local JekyVipData = {}
+return JekyVipData

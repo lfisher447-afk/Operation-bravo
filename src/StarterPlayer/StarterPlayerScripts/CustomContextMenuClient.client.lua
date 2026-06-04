@@ -1,0 +1,5 @@
+local Players = game:GetService('Players')
+local UserInputService = game:GetService('UserInputService')
+local ReplicatedStorage = game:GetService('ReplicatedStorage')
+local localPlayer = Players.LocalPlayer; local mouse = localPlayer:GetMouse()
+print('[MENU] Custom Context Menu client operational.')

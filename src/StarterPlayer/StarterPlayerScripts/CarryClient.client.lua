@@ -1,0 +1,6 @@
+local Players = game:GetService('Players')
+local ReplicatedStorage = game:GetService('ReplicatedStorage')
+local UserInputService = game:GetService('UserInputService')
+local RunService = game:GetService('RunService')
+local CarryRemote = ReplicatedStorage:WaitForChild('CarryRemote')
+print('[CARRY] Client active.')

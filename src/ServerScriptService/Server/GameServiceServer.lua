@@ -1,0 +1,2 @@
+local GameServiceServer = {}
+return GameServiceServer
