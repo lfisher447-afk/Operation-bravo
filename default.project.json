@@ -9,7 +9,10 @@
     },
     "ReplicatedStorage": {
       "App": {
-        "$path": "src/ReplicatedStorage/App"
+        "$path": "src/ReplicatedStorage/App",
+        "Remotes": {
+          "$className": "Folder"
+        }
       },
       "Shared": {
         "$path": "src/ReplicatedStorage/Shared"
@@ -18,9 +21,6 @@
         "ThirdParty": {
           "$path": "src/ReplicatedStorage/NovaAC/ThirdParty"
         }
-      },
-      "Remotes": {
-        "$className": "Folder"
       },
       "VANITY-ANTICHEAT": {
         "$path": "src/ReplicatedStorage/VANITY-ANTICHEAT"
